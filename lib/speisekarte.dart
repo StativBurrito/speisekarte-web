@@ -29,7 +29,7 @@ class MenuItem {
 }
 
 class Speisekarte extends StatefulWidget {
-  const Speisekarte({Key? key}) : super(key: key);
+  const Speisekarte({super.key});
 
   @override
   State<Speisekarte> createState() => _SpeisekarteState();
@@ -233,7 +233,7 @@ class _SpeisekarteState extends State<Speisekarte> {
                               children.add(
                                 ListTile(
                                   title: Text(item.name),
-                                  subtitle: Text('${item.tag}'),
+                                  subtitle: Text(item.tag),
                                   trailing: Text(
                                     '${item.preis.toStringAsFixed(2)} €',
                                   ),
