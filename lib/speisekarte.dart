@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 // Modelklasse für ein Menü-Item
+typedef JsonMap = Map<String, dynamic>;
 class MenuItem {
   final String restaurant;
-  final String tag; // z.B. "Montag"
+  final String tag;
   final String name;
   final double preis;
 
@@ -16,7 +17,7 @@ class MenuItem {
     required this.preis,
   });
 
-  factory MenuItem.fromJson(Map<String, dynamic> json) {
+  factory MenuItem.fromJson(JsonMap json) {
     return MenuItem(
       restaurant: json['Restaurant'] as String,
       tag: json['Tag'] as String,
@@ -27,7 +28,7 @@ class MenuItem {
 }
 
 class Speisekarte extends StatefulWidget {
-  const Speisekarte({super.key});
+  const Speisekarte({Key? key}) : super(key: key);
 
   @override
   State<Speisekarte> createState() => _SpeisekarteState();
@@ -41,9 +42,32 @@ class _SpeisekarteState extends State<Speisekarte> {
   @override
   void initState() {
     super.initState();
-    // Voreinstellung für den aktuellen Wochentag (Mo–Fr), sonst keine Vorauswahl
-    final weekday = DateTime.now().weekday; // 1=Mo ... 7=So
-    if (weekday >= DateTime.monday && weekday <= DateTime.friday) {
+    // Voreinstellung für aktuellen Wochentag (Mo–Fr), sonst null
+    final wd = DateTime.now().weekday;
+    const dayNames = {
+      DateTime.monday: 'Montag',
+      DateTime.tuesday: 'Dienstag',
+      DateTime.wednesday: 'Mittwoch',
+      DateTime.thursday: 'Donnerstag',
+      DateTime.friday: 'Freitag',
+    };
+    _selectedDay = (wd >= DateTime.monday && wd <= DateTime.friday)
+        ? dayNames[wd]
+        : null;
+    _selectedRestaurant = null;
+    _futureMenus = loadMenuItems();
+  }
+
+  Future<List<MenuItem>> loadMenuItems() async {
+    final raw = await rootBundle.loadString('assets/menus/gerichte.json');
+    final List<dynamic> data = jsonDecode(raw);
+    return data.map((e) => MenuItem.fromJson(e as JsonMap)).toList();
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _selectedRestaurant = null;
+      final wd = DateTime.now().weekday;
       const dayNames = {
         DateTime.monday: 'Montag',
         DateTime.tuesday: 'Dienstag',
@@ -51,36 +75,9 @@ class _SpeisekarteState extends State<Speisekarte> {
         DateTime.thursday: 'Donnerstag',
         DateTime.friday: 'Freitag',
       };
-      _selectedDay = dayNames[weekday];
-    } else {
-      _selectedDay = null;
-    }
-    _selectedRestaurant = null;
-    _futureMenus = loadMenuItems();
-  }
-
-  Future<List<MenuItem>> loadMenuItems() async {
-    final raw = await rootBundle.loadString('assets/menus/gerichte.json');
-    final List<dynamic> list = jsonDecode(raw);
-    return list.map((e) => MenuItem.fromJson(e)).toList();
-  }
-
-  void _resetFilters() {
-    setState(() {
-      _selectedRestaurant = null;
-      final weekday = DateTime.now().weekday;
-      if (weekday >= DateTime.monday && weekday <= DateTime.friday) {
-        const dayNames = {
-          DateTime.monday: 'Montag',
-          DateTime.tuesday: 'Dienstag',
-          DateTime.wednesday: 'Mittwoch',
-          DateTime.thursday: 'Donnerstag',
-          DateTime.friday: 'Freitag',
-        };
-        _selectedDay = dayNames[weekday];
-      } else {
-        _selectedDay = null;
-      }
+      _selectedDay = (wd >= DateTime.monday && wd <= DateTime.friday)
+          ? dayNames[wd]
+          : null;
     });
   }
 
@@ -88,7 +85,7 @@ class _SpeisekarteState extends State<Speisekarte> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Was gibt\'s heute zu essen?'),
+        title: const Text("Was gibt's heute zu essen?"),
         actions: [
           IconButton(
             icon: const Icon(Icons.restaurant_menu),
@@ -100,7 +97,7 @@ class _SpeisekarteState extends State<Speisekarte> {
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<MenuItem>>(
           future: _futureMenus,
-          builder: (context, snapshot) {
+          builder: (ctx, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -109,87 +106,100 @@ class _SpeisekarteState extends State<Speisekarte> {
             }
 
             final allMenus = snapshot.data!;
-            // Dropdown-Listen erzeugen
             final restaurants = allMenus
                 .map((m) => m.restaurant)
                 .toSet()
                 .toList()
-              ..sort();
+                  ..sort();
             final days = <String>[
               'Montag',
               'Dienstag',
               'Mittwoch',
               'Donnerstag',
-              'Freitag',
+              'Freitag'
             ];
 
-            // Filter anwenden
             final filtered = allMenus.where((m) {
-              final matchRest = _selectedRestaurant == null || m.restaurant == _selectedRestaurant;
-              final matchDay = _selectedDay == null || m.tag == _selectedDay;
-              return matchRest && matchDay;
+              final okRest = _selectedRestaurant == null ||
+                  m.restaurant == _selectedRestaurant;
+              final okDay = _selectedDay == null || m.tag == _selectedDay;
+              return okRest && okDay;
             }).toList();
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: [
-                    // Restaurant Dropdown
-                    Expanded(
-                      child: DropdownButton<String>(
-                        hint: const Text('Restaurant'),
-                        value: _selectedRestaurant,
-                        isExpanded: true,
-                        items: [
-                          const DropdownMenuItem(value: null, child: Text('Alle Restaurants')),
-                          ...restaurants.map(
-                            (r) => DropdownMenuItem(value: r, child: Text(r)),
-                          ),
-                        ],
-                        onChanged: (value) => setState(() => _selectedRestaurant = value),
+                // Responsive Filter-Menü
+                LayoutBuilder(
+                  builder: (context, cons) {
+                    final isMobile = cons.maxWidth < 600;
+                    final filters = [
+                      // Restaurant Dropdown
+                      Expanded(
+                        child: DropdownButton<String>(
+                          hint: const Text('Restaurant'),
+                          value: _selectedRestaurant,
+                          isExpanded: true,
+                          items: [
+                            const DropdownMenuItem(
+                                value: null, child: Text('Alle Restaurants')),
+                            ...restaurants
+                                .map((r) =>
+                                    DropdownMenuItem(value: r, child: Text(r)))
+                                .toList(),
+                          ],
+                          onChanged: (v) => setState(() => _selectedRestaurant = v),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Tag Dropdown
-                    Expanded(
-                      child: DropdownButton<String>(
-                        hint: const Text('Tag'),
-                        value: _selectedDay,
-                        isExpanded: true,
-                        items: [
-                          const DropdownMenuItem(value: null, child: Text('Alle Tage')),
-                          ...days.map(
-                            (d) => DropdownMenuItem(value: d, child: Text(d)),
-                          ),
-                        ],
-                        onChanged: (value) => setState(() => _selectedDay = value),
+                      const SizedBox(width: 8, height: 8),
+                      // Tag Dropdown
+                      Expanded(
+                        child: DropdownButton<String>(
+                          hint: const Text('Tag'),
+                          value: _selectedDay,
+                          isExpanded: true,
+                          items: [
+                            const DropdownMenuItem(
+                                value: null, child: Text('Alle Tage')),
+                            ...days
+                                .map((d) =>
+                                    DropdownMenuItem(value: d, child: Text(d)))
+                                .toList(),
+                          ],
+                          onChanged: (v) => setState(() => _selectedDay = v),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Zurücksetzen-Button
-                    ElevatedButton(
-                      onPressed: _resetFilters,
-                      child: const Text('Zurücksetzen'),
-                    ),
-                  ],
+                      const SizedBox(width: 8, height: 8),
+                      // Reset Button
+                      ElevatedButton(
+                        onPressed: _resetFilters,
+                        child: const Text('Zurücksetzen'),
+                      ),
+                    ];
+                    return isMobile
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: filters,
+                          )
+                        : Row(children: filters);
+                  },
                 ),
-                const SizedBox(height: 20),
-                // Gefilterte Ergebnisse
+                const SizedBox(height: 16),
+                // Ergebnisliste mit Divider
                 Expanded(
                   child: filtered.isEmpty
                       ? const Center(child: Text('Keine Treffer'))
-                      : ListView.builder(
+                      : ListView.separated(
                           itemCount: filtered.length,
-                          itemBuilder: (context, index) {
-                            final item = filtered[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 6),
-                              child: ListTile(
-                                title: Text(item.name),
-                                subtitle: Text('${item.restaurant} • ${item.tag}'),
-                                trailing: Text('${item.preis.toStringAsFixed(2)} €'),
-                              ),
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 1),
+                          itemBuilder: (context, idx) {
+                            final item = filtered[idx];
+                            return ListTile(
+                              title: Text(item.name),
+                              subtitle: Text('${item.restaurant} • ${item.tag}'),
+                              trailing:
+                                  Text('${item.preis.toStringAsFixed(2)} €'),
                             );
                           },
                         ),
