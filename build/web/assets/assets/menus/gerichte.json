@@ -1,0 +1,242 @@
+[
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Montag",
+    "Gericht Name": "Gemüsepflanzerl mit Kartoffelgratin",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Montag",
+    "Gericht Name": "Hähnchengeschnetzeltes mit Butterrreis",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Dienstag",
+    "Gericht Name": "Lasagne al forno",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Dienstag",
+    "Gericht Name": "Baked Potatoe mit Sauercreme und Salat",
+    "Gericht Preis": 7.9
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Dienstag",
+    "Gericht Name": "Wiener Schnitzel mit Pommes",
+    "Gericht Preis": 7.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Schw.-Kotelett mit Pilzen und Püree",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Piccata v. d. Pute auf Tomatenspaghetti",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Currywurst mit Pommes",
+    "Gericht Preis": 6.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Freitag",
+    "Gericht Name": "Nougatknödel mit Vanillesauce",
+    "Gericht Preis": 7.5
+  },
+  {
+    "Restaurant": "Metzgerei Stuhlberger",
+    "Tag": "Freitag",
+    "Gericht Name": "Backfisch mit Kartoffelsalat und Remoulade",
+    "Gericht Preis": 9.5
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Montag",
+    "Gericht Name": "Quiche Lorraine",
+    "Gericht Preis": 7.5
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Montag",
+    "Gericht Name": "Linsensalat mit Feta (vegetarisch)",
+    "Gericht Preis": 6.9
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Dienstag",
+    "Gericht Name": "Gemüselasagne (vegetarisch)",
+    "Gericht Preis": 7.8
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Dienstag",
+    "Gericht Name": "Gefüllte Paprika mit Reis",
+    "Gericht Preis": 8.2
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Ofenkartoffel mit Kräuterquark (vegetarisch)",
+    "Gericht Preis": 6.5
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Rindergulasch mit Spätzle",
+    "Gericht Preis": 9.0
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Zucchinipuffer mit Dip (vegetarisch)",
+    "Gericht Preis": 6.8
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Hähnchenkeule mit Gemüse",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Freitag",
+    "Gericht Name": "Spinatknödel mit Käsesoße (vegetarisch)",
+    "Gericht Preis": 7.2
+  },
+  {
+    "Restaurant": "Café Sonnenschein",
+    "Tag": "Freitag",
+    "Gericht Name": "Gebratener Lachs mit Wildreis",
+    "Gericht Preis": 9.5
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Montag",
+    "Gericht Name": "Gebratene Nudeln mit Gemüse (vegetarisch)",
+    "Gericht Preis": 6.5
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Montag",
+    "Gericht Name": "Hähnchen süß-sauer mit Reis",
+    "Gericht Preis": 8.0
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Dienstag",
+    "Gericht Name": "Tofu-Curry mit Kokosmilch (vegetarisch)",
+    "Gericht Preis": 7.0
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Dienstag",
+    "Gericht Name": "Rindfleisch Chop Suey",
+    "Gericht Preis": 8.3
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Miso-Suppe mit Gemüse (vegetarisch)",
+    "Gericht Preis": 5.5
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Ente knusprig mit Gemüse",
+    "Gericht Preis": 9.0
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Sommerrollen (vegetarisch)",
+    "Gericht Preis": 6.0
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Gebratene Garnelen mit Brokkoli",
+    "Gericht Preis": 9.2
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Freitag",
+    "Gericht Name": "Veganes Thai-Basilikum-Wokgericht",
+    "Gericht Preis": 7.2
+  },
+  {
+    "Restaurant": "Asia Garden",
+    "Tag": "Freitag",
+    "Gericht Name": "Sushi-Box klein",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Montag",
+    "Gericht Name": "Pasta al Pomodoro (vegetarisch)",
+    "Gericht Preis": 7.0
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Montag",
+    "Gericht Name": "Pasta Carbonara",
+    "Gericht Preis": 7.8
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Dienstag",
+    "Gericht Name": "Pizza Margherita (vegetarisch)",
+    "Gericht Preis": 6.9
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Dienstag",
+    "Gericht Name": "Pizza Salami",
+    "Gericht Preis": 7.5
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Risotto mit Pilzen (vegetarisch)",
+    "Gericht Preis": 8.0
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Mittwoch",
+    "Gericht Name": "Lasagne alla Bolognese",
+    "Gericht Preis": 8.5
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Gnocchi mit Tomatensoße (vegetarisch)",
+    "Gericht Preis": 7.4
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Donnerstag",
+    "Gericht Name": "Saltimbocca alla Romana",
+    "Gericht Preis": 9.0
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Freitag",
+    "Gericht Name": "Spaghetti Aglio e Olio (vegetarisch)",
+    "Gericht Preis": 6.8
+  },
+  {
+    "Restaurant": "Ristorante Bella Italia",
+    "Tag": "Freitag",
+    "Gericht Name": "Pesce alla Griglia",
+    "Gericht Preis": 9.8
+  }
+]
