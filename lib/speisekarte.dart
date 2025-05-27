@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-// Modelklasse für ein Menü-Item
 typedef JsonMap = Map<String, dynamic>;
+
+// Modelklasse für ein Menü-Item
 class MenuItem {
   final String restaurant;
   final String tag;
@@ -42,7 +43,6 @@ class _SpeisekarteState extends State<Speisekarte> {
   @override
   void initState() {
     super.initState();
-    // Voreinstellung für aktuellen Wochentag (Mo–Fr), sonst null
     final wd = DateTime.now().weekday;
     const dayNames = {
       DateTime.monday: 'Montag',
@@ -51,9 +51,8 @@ class _SpeisekarteState extends State<Speisekarte> {
       DateTime.thursday: 'Donnerstag',
       DateTime.friday: 'Freitag',
     };
-    _selectedDay = (wd >= DateTime.monday && wd <= DateTime.friday)
-        ? dayNames[wd]
-        : null;
+    _selectedDay =
+        (wd >= DateTime.monday && wd <= DateTime.friday) ? dayNames[wd] : null;
     _selectedRestaurant = null;
     _futureMenus = loadMenuItems();
   }
@@ -75,23 +74,26 @@ class _SpeisekarteState extends State<Speisekarte> {
         DateTime.thursday: 'Donnerstag',
         DateTime.friday: 'Freitag',
       };
-      _selectedDay = (wd >= DateTime.monday && wd <= DateTime.friday)
-          ? dayNames[wd]
-          : null;
+      _selectedDay =
+          (wd >= DateTime.monday && wd <= DateTime.friday)
+              ? dayNames[wd]
+              : null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = Theme.of(context).iconTheme.color;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Was gibt's heute zu essen?"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.restaurant_menu),
-            onPressed: () {},
-          ),
-        ],
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Was gibt's heute zu essen?"),
+            const SizedBox(width: 8),
+            Icon(Icons.restaurant_menu, color: iconColor),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,103 +108,143 @@ class _SpeisekarteState extends State<Speisekarte> {
             }
 
             final allMenus = snapshot.data!;
-            final restaurants = allMenus
-                .map((m) => m.restaurant)
-                .toSet()
-                .toList()
-                  ..sort();
+            final restaurants =
+                allMenus.map((m) => m.restaurant).toSet().toList()..sort();
             final days = <String>[
               'Montag',
               'Dienstag',
               'Mittwoch',
               'Donnerstag',
-              'Freitag'
+              'Freitag',
             ];
 
-            final filtered = allMenus.where((m) {
-              final okRest = _selectedRestaurant == null ||
-                  m.restaurant == _selectedRestaurant;
-              final okDay = _selectedDay == null || m.tag == _selectedDay;
-              return okRest && okDay;
-            }).toList();
+            final filtered =
+                allMenus.where((m) {
+                  final okRest =
+                      _selectedRestaurant == null ||
+                      m.restaurant == _selectedRestaurant;
+                  final okDay = _selectedDay == null || m.tag == _selectedDay;
+                  return okRest && okDay;
+                }).toList();
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Responsive Filter-Menü
-                LayoutBuilder(
-                  builder: (context, cons) {
-                    final isMobile = cons.maxWidth < 600;
-                    final filters = [
-                      // Restaurant Dropdown
-                      Expanded(
-                        child: DropdownButton<String>(
-                          hint: const Text('Restaurant'),
-                          value: _selectedRestaurant,
-                          isExpanded: true,
-                          items: [
-                            const DropdownMenuItem(
-                                value: null, child: Text('Alle Restaurants')),
-                            ...restaurants
-                                .map((r) =>
-                                    DropdownMenuItem(value: r, child: Text(r)))
-                                .toList(),
-                          ],
-                          onChanged: (v) => setState(() => _selectedRestaurant = v),
-                        ),
+                // ChoiceChips für Restaurants
+                Text(
+                  'Restaurant auswählen:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: 8),
+                Center(),
+                Wrap(
+                  runSpacing: 20,
+                  spacing: 20,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Alle'),
+                      selected: _selectedRestaurant == null,
+                      onSelected:
+                          (_) => setState(() => _selectedRestaurant = null),
+                    ),
+                    ...restaurants.map(
+                      (r) => ChoiceChip(
+                        label: Text(r),
+                        selected: _selectedRestaurant == r,
+                        onSelected:
+                            (_) => setState(() => _selectedRestaurant = r),
                       ),
-                      const SizedBox(width: 8, height: 8),
-                      // Tag Dropdown
-                      Expanded(
-                        child: DropdownButton<String>(
-                          hint: const Text('Tag'),
-                          value: _selectedDay,
-                          isExpanded: true,
-                          items: [
-                            const DropdownMenuItem(
-                                value: null, child: Text('Alle Tage')),
-                            ...days
-                                .map((d) =>
-                                    DropdownMenuItem(value: d, child: Text(d)))
-                                .toList(),
-                          ],
-                          onChanged: (v) => setState(() => _selectedDay = v),
-                        ),
+                    ),
+                    Divider()
+                  ],
+                ),
+                const SizedBox(height: 25),
+                // ChoiceChips für Tage
+                Text(
+                  'Tag auswählen:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  runSpacing: 20,
+                  spacing: 20,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Alle'),
+                      selected: _selectedDay == null,
+                      onSelected: (_) => setState(() => _selectedDay = null),
+                    ),
+                    ...days.map(
+                      (d) => ChoiceChip(
+                        label: Text(d),
+                        selected: _selectedDay == d,
+                        onSelected: (_) => setState(() => _selectedDay = d),
                       ),
-                      const SizedBox(width: 8, height: 8),
-                      // Reset Button
-                      ElevatedButton(
-                        onPressed: _resetFilters,
-                        child: const Text('Zurücksetzen'),
-                      ),
-                    ];
-                    return isMobile
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: filters,
-                          )
-                        : Row(children: filters);
-                  },
+                    ),
+                    Divider()
+                  ],
                 ),
                 const SizedBox(height: 16),
-                // Ergebnisliste mit Divider
+                // Reset-Button
+                ElevatedButton(
+                  onPressed: _resetFilters,
+                  child: const Text('Zurücksetzen'),
+                ),
+                const SizedBox(height: 16),
+                // Gefilterte Liste mit Restaurant-Header
                 Expanded(
-                  child: filtered.isEmpty
-                      ? const Center(child: Text('Keine Treffer'))
-                      : ListView.separated(
-                          itemCount: filtered.length,
-                          separatorBuilder: (context, index) =>
-                              const Divider(height: 1),
-                          itemBuilder: (context, idx) {
-                            final item = filtered[idx];
-                            return ListTile(
-                              title: Text(item.name),
-                              subtitle: Text('${item.restaurant} • ${item.tag}'),
-                              trailing:
-                                  Text('${item.preis.toStringAsFixed(2)} €'),
-                            );
-                          },
-                        ),
+                  child:
+                      filtered.isEmpty
+                          ? const Center(child: Text('Keine Treffer'))
+                          : ListView.builder(
+                            itemCount: filtered.length,
+                            itemBuilder: (context, idx) {
+                              final item = filtered[idx];
+                              final isNewGroup =
+                                  idx == 0 ||
+                                  item.restaurant !=
+                                      filtered[idx - 1].restaurant;
+                              List<Widget> children = [];
+                              if (isNewGroup) {
+                                children.add(const SizedBox(height: 20));
+                                children.add(const Divider());
+                                children.add(
+                                  Row(
+                                    children: [
+                                      // Platzhalter-Logo
+                                      Container(
+                                        width: 40,
+                                        height: 40,
+                                        color: Colors.grey.shade300,
+                                      ),
+                                      const SizedBox(width: 20),
+                                      Text(
+                                        item.restaurant,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                children.add(const SizedBox(height: 8));
+                              }
+                              children.add(
+                                ListTile(
+                                  title: Text(item.name),
+                                  subtitle: Text('${item.tag}'),
+                                  trailing: Text(
+                                    '${item.preis.toStringAsFixed(2)} €',
+                                  ),
+                                ),
+                              );
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: children,
+                              );
+                            },
+                          ),
                 ),
               ],
             );
